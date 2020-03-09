@@ -1,6 +1,8 @@
 package io.javabrains.coronavirustracker.controllers;
 
+import io.javabrains.coronavirustracker.entities.Greetings;
 import io.javabrains.coronavirustracker.models.LocationStats;
+import io.javabrains.coronavirustracker.repo.GreetingsRepository;
 import io.javabrains.coronavirustracker.services.CoronaVirusDataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -15,6 +17,13 @@ public class HomeController {
     @Autowired
     CoronaVirusDataService coronaVirusDataService;
 
+    private final GreetingsRepository greetingsRepository;
+
+    @Autowired
+    public HomeController(GreetingsRepository greetingsRepository) {
+        this.greetingsRepository = greetingsRepository;
+    }
+
     @GetMapping("/")
     public String home(Model model){
         List<LocationStats> allStats = coronaVirusDataService.getAllStats();
@@ -28,5 +37,10 @@ public class HomeController {
         model.addAttribute("totalDiffFromPrevDay", totalDiffFromPrevDay);
         model.addAttribute("testName", "Arfin");
         return "home";
+    }
+
+    @GetMapping("/greetings")
+    public List<Greetings> greetings(){
+        return greetingsRepository.findAll();
     }
 }
